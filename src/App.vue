@@ -22,12 +22,23 @@
             <div class="flex-none">
               <input type="checkbox" v-model="item.isDone" />
             </div>
+            <div class="flex">
+              <button-delete @click="deleteItem(item.id)" />
+            </div>
           </div>
         </div>
-        <i class="text-gray-400 text-sm text-right pt-4">
-          Total items: {{ itemsCount }} - Done: {{ itemsDoneCount }} - Left:
-          {{ itemsCount - itemsDoneCount }}
-        </i>
+        <div class="text-gray-400 text-sm flex pt-4">
+          <span
+            class="cursor-pointer hover:underline hover:text-gray-500 active:text-green-700"
+            @click="deleteDone"
+            >Clear done</span
+          >
+          <div class="flex-grow"></div>
+          <i>
+            Total items: {{ itemsCount }} - Done: {{ itemsDoneCount }} - Left:
+            {{ itemsCount - itemsDoneCount }}
+          </i>
+        </div>
       </div>
     </div>
   </div>
@@ -36,17 +47,19 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, computed } from 'vue';
 import ButtonAdd from './components/ButtonAdd.vue';
+import ButtonDelete from './components/ButtonDelete.vue';
 
-interface ListItem {
+interface TodoItem {
+  id: number;
   title: string;
   isDone: boolean;
 }
 
 export default defineComponent({
   name: 'App',
-  components: { ButtonAdd },
+  components: { ButtonAdd, ButtonDelete },
   setup: () => {
-    const state = reactive({ newListItem: '', allItems: [] as ListItem[] });
+    const state = reactive({ newListItem: '', allItems: [] as TodoItem[] });
 
     const itemsCount = computed(() => state.allItems.length);
     const itemsDoneCount = computed(() =>
@@ -57,9 +70,10 @@ export default defineComponent({
   },
 
   methods: {
-    addToList() {
+    addToList(): void {
       if (this.newListItem) {
-        const newItem: ListItem = {
+        const newItem: TodoItem = {
+          id: this.itemsCount + 1, // TODO error prone (id should always be unique)
           title: this.newListItem,
           isDone: false,
         };
@@ -67,6 +81,14 @@ export default defineComponent({
         this.allItems.push(newItem);
         this.newListItem = '';
       }
+    },
+
+    deleteItem(id: number): void {
+      this.allItems = this.allItems.filter((item: TodoItem) => item.id !== id);
+    },
+
+    deleteDone(): void {
+      this.allItems = this.allItems.filter((item: TodoItem) => !item.isDone);
     },
   },
 });
