@@ -73,7 +73,7 @@ export default defineComponent({
     addToList(): void {
       if (this.newListItem) {
         const newItem: TodoItem = {
-          id: this.itemsCount + 1, // TODO error prone (id should always be unique)
+          id: this.generateUniqueId(),
           title: this.newListItem,
           isDone: false,
         };
@@ -89,6 +89,23 @@ export default defineComponent({
 
     deleteDone(): void {
       this.allItems = this.allItems.filter((item: TodoItem) => !item.isDone);
+    },
+
+    generateUniqueId(): number {
+      function getRandom(maxValue: number) {
+        return Math.floor(Math.random() * maxValue) + 1;
+      }
+      const allIdx: number[] = [];
+      this.allItems.forEach((item) => {
+        allIdx.push(item.id);
+      });
+
+      let uniqueId = getRandom(99999);
+      while (allIdx.includes(uniqueId)) {
+        uniqueId = getRandom(99999);
+      }
+
+      return uniqueId;
     },
   },
 });
