@@ -95,14 +95,16 @@ export default defineComponent({
       function getRandom(maxValue: number) {
         return Math.floor(Math.random() * maxValue) + 1;
       }
+
+      const maxValue = 99999;
       const allIdx: number[] = [];
       this.allItems.forEach((item) => {
         allIdx.push(item.id);
       });
 
-      let uniqueId = getRandom(99999);
+      let uniqueId = getRandom(maxValue);
       while (allIdx.includes(uniqueId)) {
-        uniqueId = getRandom(99999);
+        uniqueId = getRandom(maxValue);
       }
 
       return uniqueId;
