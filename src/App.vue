@@ -13,17 +13,22 @@
           />
           <button-add @click="addToList" />
         </div>
-        <div v-for="(item, i) in allItems" :key="i" class="px-4 pt-2">
-          <div class="flex">
-            <span class="flex-none" :class="{ 'line-through': item.isDone }">{{
-              item.title
-            }}</span>
-            <div class="flex-grow"></div>
-            <div class="flex-none">
-              <input type="checkbox" v-model="item.isDone" />
-            </div>
+        <div class="overflow-y-auto max-h-56">
+          <div v-for="(item, i) in allItems" :key="i" class="px-4 pt-2">
             <div class="flex">
-              <button-delete @click="deleteItem(item.id)" />
+              <div class="flex-none pr-2">
+                <input type="checkbox" v-model="item.isDone" />
+              </div>
+              <span
+                @click="item.isDone = !item.isDone"
+                class="flex-none cursor-pointer"
+                :class="{ 'line-through': item.isDone }"
+                >{{ item.title }}</span
+              >
+              <div class="flex-grow"></div>
+              <div class="flex">
+                <button-delete @click="deleteItem(item.id)" />
+              </div>
             </div>
           </div>
         </div>
