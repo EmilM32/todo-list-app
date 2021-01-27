@@ -64,14 +64,25 @@ export default defineComponent({
   name: 'App',
   components: { ButtonAdd, ButtonDelete },
   setup: () => {
-    const state = reactive({ newListItem: '', allItems: [] as TodoItem[] });
+    const state = reactive({
+      newListItem: '',
+      allItems: [] as TodoItem[],
+      itemsCount: computed(() => getAllItemsCount()),
+      itemsDoneCount: computed(() => getItemsDoneCount()),
+    });
 
-    const itemsCount = computed(() => state.allItems.length);
-    const itemsDoneCount = computed(() =>
-      state.allItems.reduce((acc, cur) => acc + +cur.isDone, 0)
-    );
+    function getItemsDoneCount(): number {
+      return state.allItems.reduce(
+        (acc: number, cur: TodoItem) => acc + +cur.isDone,
+        0
+      );
+    }
 
-    return { ...toRefs(state), itemsCount, itemsDoneCount };
+    function getAllItemsCount(): number {
+      return state.allItems.length;
+    }
+
+    return { ...toRefs(state) };
   },
 
   methods: {
