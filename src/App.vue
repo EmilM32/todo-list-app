@@ -82,39 +82,37 @@ export default defineComponent({
       return state.allItems.length;
     }
 
-    return { ...toRefs(state) };
-  },
-
-  methods: {
-    addToList(): void {
-      if (this.newListItem) {
+    function addToList(): void {
+      if (state.newListItem) {
         const newItem: TodoItem = {
-          id: this.generateUniqueId(),
-          title: this.newListItem,
+          id: generateUniqueId(),
+          title: state.newListItem,
           isDone: false,
         };
 
-        this.allItems.push(newItem);
-        this.newListItem = '';
+        state.allItems.push(newItem);
+        state.newListItem = '';
       }
-    },
+    }
 
-    deleteItem(id: number): void {
-      this.allItems = this.allItems.filter((item: TodoItem) => item.id !== id);
-    },
+    function deleteItem(id: number): void {
+      state.allItems = state.allItems.filter(
+        (item: TodoItem) => item.id !== id
+      );
+    }
 
-    deleteDone(): void {
-      this.allItems = this.allItems.filter((item: TodoItem) => !item.isDone);
-    },
+    function deleteDone(): void {
+      state.allItems = state.allItems.filter((item: TodoItem) => !item.isDone);
+    }
 
-    generateUniqueId(): number {
+    function generateUniqueId(): number {
       function getRandom(maxValue: number) {
         return Math.floor(Math.random() * maxValue) + 1;
       }
 
       const maxValue = 99999;
       const allIdx: number[] = [];
-      this.allItems.forEach((item) => {
+      state.allItems.forEach((item) => {
         allIdx.push(item.id);
       });
 
@@ -124,7 +122,9 @@ export default defineComponent({
       }
 
       return uniqueId;
-    },
+    }
+
+    return { ...toRefs(state), addToList, deleteItem, deleteDone };
   },
 });
 </script>
